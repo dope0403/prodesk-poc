@@ -131,91 +131,22 @@ const getMessageIdWebhook = async (req, res) => {
       id: attachmentId,
     });
 
-    // const url = `https://gmail.googleapis.com/gmail/v1/users/prodesk.poc@gmail.com/messages/${response.id}/attachments/${attachmentId}`;
+    const fromAndDate = response.payload.headers.filter(
+      (obj) => obj.name === "From" || obj.name === "Date"
+    );
 
-    // const { token } = await OAuth2Client.getAccessToken();
-    // const config = generateConfig(url, token);
-    // const encodedAttachmentData = await axios(config);
     res.send({
       emailData,
       encodedAttachmentData: encodedAttachmentData.data.data,
+      from: fromAndDate[0].value,
+      date: fromAndDate[1].value,
     });
-
-    // .then(async (auth) => {
-
-    // })
-    // .catch(console.error);
-    // let cred = await loadSavedCredentialsIfExist();
-    // let response = await connectPubSub(cred);
-    // const gmail = google.gmail({ version: "v1", auth });
-    // const emailContent = await gmail.users.messages.list({
-    //   userId: "me",
-    // });
-    // console.log(response);
-
-    // const emailData = JSON.parse(Buffer.from(message.data, 'base64').toString());
-
-    // Use the message ID to fetch the email content from Gmail API
-    // const gmail = google.gmail({ version: "v1", cred });
-    // const gmail = await auth.getClient();
-    // console.log(gmail.users.messages.get);
-    // const emailContent = await gmail.users.messages.list({
-    //   userId: "me",
-    // });
-
-    // console.log(`Email content: ${emailContent.data.snippet}`);
-    // } catch (err) {
-
-    // let historyId = response.data.historyId;
-    // console.log()
-    // let temp = getHistory(cred, historyId);
-    // res.send(emailContent.data);
   } catch (error) {
     console.log({ error: error.message });
     res.send({ error: error.message });
   }
 };
 
-// const getEmail = async (req, res) => {
-//   try {
-//     const url = `https://gmail.googleapis.com/gmail/v1/users/${req.params.email}/profile`;
-//     const { token } = await oAuth2Client.getAccessToken();
-//     const config = generateConfig(url, token);
-//     const response = await axios(config);
-//     res.json(response.data);
-//   } catch (error) {
-//     console.log(error.message);
-//     res.json({ error: error.message });
-//   }
-// };
-
-// const getUserMessages = async (req, res) => {
-//   try {
-//     const url = `https://gmail.googleapis.com/gmail/v1/users/${req.params.email}/messages`;
-//     const { token } = await oAuth2Client.getAccessToken();
-//     const config = generateConfig(url, token);
-//     const response = await axios(config);
-//     res.json(response.data);
-//   } catch (error) {
-//     res.send({ error: error.message });
-//   }
-// };
-
-// const getEmailData = async (req, res) => {
-//   try {
-//     const url = `https://gmail.googleapis.com/gmail/v1/users/${req.params.email}/messages/${req.params.messageId}`;
-//     const { token } = await oAuth2Client.getAccessToken();
-//     const config = generateConfig(url, token);
-//     const response = await axios(config);
-//     res.send(response.data);
-//   } catch (error) {
-//     res.send({ error: error.message });
-//   }
-// };
-
 module.exports = {
-  // getEmail,
-  // getUserMessages,
-  // getEmailData,
   getMessageIdWebhook,
 };
