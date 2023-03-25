@@ -1,4 +1,4 @@
-const axios = require("axios");
+const { axios } = require("axios");
 const fs = require("fs").promises;
 const path = require("path");
 const process = require("process");
@@ -135,12 +135,32 @@ const getMessageIdWebhook = async (req, res) => {
       (obj) => obj.name === "From" || obj.name === "Date"
     );
 
-    res.send({
+    const data = encodedAttachmentData.data.data;
+    const fileData = Buffer.from(data, "base64");
+    const filename = "attachment-1";
+    fs.writeFile(filename, fileData, (err) => {
+      if (!err) {
+        console.log("attachment saved");
+      }
+    });
+
+    const dataToSend = {
       emailData,
       encodedAttachmentData: encodedAttachmentData.data.data,
       from: fromAndDate[0].value,
       date: fromAndDate[1].value,
+    };
+
+    // service url
+    const dataCleaningServiceUrl = ``;
+
+    const cleaningServiceResponse = await axios({
+      method: "POST",
+      url: dataCleaningServiceUrl,
+      data: dataToSend,
     });
+
+    res.send(dataToSend);
   } catch (error) {
     console.log({ error: error.message });
     res.send({ error: error.message });
